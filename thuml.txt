@@ -1,0 +1,24 @@
+@startuml img001.png
+title Execution of prove
+
+participant prove
+participant "plugin::load" as pload
+
+prove -> new:
+new -> prove
+
+prove -> process_args:
+note right: self->{exec} set by Getopts
+process_args -> prove
+
+prove -> run:
+run -> pload
+pload -> run
+run -> _get_args
+note right: $args{exec} = [...] if ( defined( $self->exec ) );
+_get_args -> run
+run -> _runtests:
+_runtests -> harness: new($args)
+_runtests -> harness: runtests(@tests)
+
+@enduml
