@@ -10,7 +10,7 @@ public class TAPRunner {
   public static void main(String[] args){
     JUnitCore core = new JUnitCore();
     core.addListener(new TAPListener());
-    Class[] classes = new Class[args.length];
+    Class<?>[] classes = new Class[args.length];
     ClassLoader loader = ClassLoader.getSystemClassLoader();
     try {
       for(int i = 0; i < args.length; i++){

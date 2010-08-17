@@ -83,7 +83,7 @@ public class TAPListenerTest {
 	
 	private void runTest(File exampleTest) throws Exception {
 	 	String className = exampleTest.getName().replaceAll("\\.java", "");
-  	Class[] classes = {loader.loadClass(className)};
+  	Class<?>[] classes = {loader.loadClass(className)};
   	core.run(classes);
 	}
 	
