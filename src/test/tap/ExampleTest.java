@@ -22,7 +22,7 @@ public class ExampleTest {
   
   @Test 
   public void noItIsnt(){
-  	assertEquals(1,2);
+  	assertEquals(2,1);
   }
   
   @Test

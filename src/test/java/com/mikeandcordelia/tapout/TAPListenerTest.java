@@ -25,72 +25,96 @@ public class TAPListenerTest {
 	private ByteArrayOutputStream err = new ByteArrayOutputStream();
 	private PrintStream realOut = System.out;
 	private PrintStream realErr = System.err;
-	
+
 	private class TestFilter implements IOFileFilter {
-		
+
 		private Pattern testPattern = Pattern.compile(".*Test\\.java");
-		
+
 		public boolean accept(File arg0) {
-			if( arg0.isFile() && testPattern.matcher(arg0.getName()).matches() ){
+			if (arg0.isFile() && testPattern.matcher(arg0.getName()).matches()) {
 				return true;
 			}
 			return false;
 		}
 
 		public boolean accept(File arg0, String arg1) {
-			if( testPattern.matcher(arg1).matches() ){
+			if (testPattern.matcher(arg1).matches()) {
 				return true;
 			}
 			return false;
 		}
 	}
-	
+
 	@Before
 	public void setUp() {
+		// set listener
 		tapListener = new TAPListener();
 		core.addListener(tapListener);
+		// reset out & err catchers
 		out.reset();
 		err.reset();
 	}
-	
+
 	@After
 	public void reset() {
 		core.removeListener(tapListener);
-		setUp();
 	}
-	
+
 	@Test
-	public void testExamples() throws Exception {
+	public void testExamples() {
 		File searchDir = new File("src/test/tap");
-    @SuppressWarnings("unchecked")
-		Iterator<File> exampleTests = FileUtils.iterateFiles(searchDir, new TestFilter(), TrueFileFilter.INSTANCE);
-    while(exampleTests.hasNext()) {
-    	File exampleTest = exampleTests.next();
-    	testExample(exampleTest);
-    }
+		@SuppressWarnings("unchecked")
+		Iterator<File> exampleTests = FileUtils.iterateFiles(searchDir,
+				new TestFilter(), TrueFileFilter.INSTANCE);
+		while (exampleTests.hasNext()) {
+			File exampleTest = exampleTests.next();
+			testExample(exampleTest);
+		}
 	}
-	
-	private void testExample(File exampleTest) throws Exception {
-		System.setOut(new PrintStream(this.out));
-		System.setErr(new PrintStream(this.err));
-		runTest(exampleTest);
-  	System.setOut(realOut);
-  	System.setErr(realErr);
-  	File expectedTapFile = getTapFileFor( exampleTest );
-  	String expectedTap = FileUtils.readFileToString(expectedTapFile);
-  	assertEquals(expectedTap, out.toString());
+
+	private void testExample(File exampleTest) {
+		try {
+			File expectedTapFile = getTapFileFor(exampleTest);
+			File expectedTapErrFile = new File(expectedTapFile.getAbsoluteFile()
+					+ ".err");
+			System.setOut(new PrintStream(this.out));
+			System.setErr(new PrintStream(this.err));
+			runTest(exampleTest);
+			String expectedTap = FileUtils.readFileToString(expectedTapFile);
+			assertEquals(expectedTap, out.toString());
+			String expectedErr = FileUtils.readFileToString(expectedTapErrFile);
+			assertCloseEnough(expectedErr, err.toString());
+			System.setOut(realOut);
+			System.setErr(realErr);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
-	
-	private void runTest(File exampleTest) throws Exception {
-	 	String className = exampleTest.getName().replaceAll("\\.java", "");
-  	Class<?>[] classes = {loader.loadClass(className)};
-  	core.run(classes);
+
+	private void runTest(File exampleTest) {
+		String className = exampleTest.getName().replaceAll("\\.java", "");
+		try {
+			Class<?>[] classes = { loader.loadClass(className) };
+			core.run(classes);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
-	
-	private File getTapFileFor( File exampleTest ) {
+
+	private File getTapFileFor(File exampleTest) {
 		String name = exampleTest.getName();
 		name = name.replaceAll("Test\\.java", ".tap");
 		name = name.toLowerCase();
 		return new File("src/test/resources/tap/", name);
+	}
+
+	private void assertCloseEnough(String expErr, String gotErr) {
+		String file = "(?<=\\bat ).*?(?= line\\b)";
+		String lineNo = "(?<=\\bline )\\d+(?=\\.)";
+		expErr = expErr.replaceAll(file, "");
+		expErr = expErr.replaceAll(lineNo, "");
+		gotErr = gotErr.replaceAll(file, "");
+		gotErr = gotErr.replaceAll(lineNo, "");
+		assertEquals(expErr, gotErr);
 	}
 }
