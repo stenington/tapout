@@ -1,0 +1,7 @@
+ok 1 - eez ok
+not ok 2 - eez not ok
+ok 3 - yes it is
+not ok 4 - no it isn't
+ok 5 - force pass
+not ok 6 - force fail
+1..6
