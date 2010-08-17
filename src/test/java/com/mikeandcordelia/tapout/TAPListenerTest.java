@@ -11,8 +11,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 
@@ -45,7 +43,6 @@ public class TAPListenerTest {
 		}
 	}
 
-	@Before
 	public void setUp() {
 		// set listener
 		tapListener = new TAPListener();
@@ -55,8 +52,7 @@ public class TAPListenerTest {
 		err.reset();
 	}
 
-	@After
-	public void reset() {
+	public void tearDown() {
 		core.removeListener(tapListener);
 	}
 
@@ -68,7 +64,9 @@ public class TAPListenerTest {
 				new TestFilter(), TrueFileFilter.INSTANCE);
 		while (exampleTests.hasNext()) {
 			File exampleTest = exampleTests.next();
+			setUp();
 			testExample(exampleTest);
+			tearDown();
 		}
 	}
 
