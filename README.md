@@ -65,8 +65,8 @@ don't think.
 ### Correspondence
 There's no natural correspondence between junit assertions and anything
 in Test::More that I can think of. It's more natural for me to equate 
-Test::More tests like 'is' or 'ok' with junit test methods annotated with
-@Test. These seem to be the fundamental units of failure.
+Test::More tests like `is` or `ok` with junit test methods annotated with
+`@Test`. These seem to be the fundamental units of failure.
 
 One trickiness here is that the order of execution in junit isn't 
 guaranteed, at least not to my knowledge. I can look into this more,
