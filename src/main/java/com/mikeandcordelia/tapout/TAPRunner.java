@@ -1,5 +1,6 @@
-import org.junit.runner.notification.*;
-import org.junit.runner.*;
+package com.mikeandcordelia.tapout;
+
+import org.junit.runner.JUnitCore;
 
 public class TAPRunner {
 

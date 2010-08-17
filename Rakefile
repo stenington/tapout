@@ -1,11 +1,15 @@
 perl_tests = FileList.new('src/test/resources/tap/**/*.t')
 tap_files = perl_tests.pathmap("%X.tap")
-task :test => [:compile, :build_test_data]
-task :compile
-file :build_test_data => FileList.new('src/test/resources/tap/**/example.tap')
+tap_err_files = perl_tests.pathmap("%X.tap.err")
+test_data = tap_files.add(tap_err_files)
+
+file :build_test_data => test_data
+
 rule '.tap' => ['.t'] do |t|
-  sh "perl #{t.source} 2>&1 1>#{t.name}"
+  # generates .tap.err too
+  system "perl #{t.source} >#{t.name} 2>#{t.name}.err"
 end
+
 task :clean do
-  sh "rm #{tap_files}"
+  sh "rm -f #{test_data}"
 end
