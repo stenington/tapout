@@ -16,7 +16,7 @@
        |_|                                          |_|
 
 
-(Thanks, Text Ascii Art Generator! http://patorjk.com/software/taag/)
+(Thanks, [Text Ascii Art Generator!](http://patorjk.com/software/taag/))
 
 TapOut: TAP-outputting, junit-running goodness
 ==============================================
@@ -30,7 +30,7 @@ from junit tests.
 
     prove --exec 'java -jar tapout.jar' src/test/java/**/*Test.java
 
-where prove is the amazing Perl TAP harness testing utility found here
+where prove is the amazing Perl TAP harness testing utility found [here]
 (http://search.cpan.org/~andya/Test-Harness-3.22/bin/prove).
 
 
