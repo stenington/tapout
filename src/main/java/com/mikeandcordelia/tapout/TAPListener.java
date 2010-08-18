@@ -68,7 +68,9 @@ public class TAPListener extends RunListener {
   
   public void testRunFinished(Result result) {
   	System.out.println("1.." + testNum);
-  	System.err.println("# Looks like you failed "+failedTotal+" tests of "+testNum+".");
+  	if( failedTotal > 0 ){
+  		System.err.println("# Looks like you failed "+failedTotal+" tests of "+testNum+".");
+  	}
   }
 } 
 
