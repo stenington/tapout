@@ -58,7 +58,7 @@ public class TAPListenerTest {
 
 	@Test
 	public void testExamples() {
-		File searchDir = new File("src/test/tap");
+		File searchDir = new File("src/test/resources/tap");
 		@SuppressWarnings("unchecked")
 		Iterator<File> exampleTests = FileUtils.iterateFiles(searchDir,
 				new TestFilter(), TrueFileFilter.INSTANCE);
@@ -92,7 +92,7 @@ public class TAPListenerTest {
 	private void runTest(File exampleTest) {
 		String className = exampleTest.getName().replaceAll("\\.java", "");
 		try {
-			Class<?>[] classes = { loader.loadClass(className) };
+			Class<?>[] classes = { loader.loadClass("tap." + className) };
 			core.run(classes);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
