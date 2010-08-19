@@ -1,0 +1,11 @@
+.classpath
+.metadata
+.project
+.externalToolBuilders
+*.swp
+*.tap
+*.tap.err
+/build
+/target
+/reports
+tapout.sh
