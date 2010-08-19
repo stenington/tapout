@@ -26,6 +26,11 @@ TapOut: TAP-outputting, junit-running goodness
 TapOut does its best to generate TAP (Test Anything Protocol) output
 from junit tests.
 
+## Installation, if you can call it that ##
+
+For now, install [Buildr](http://buildr.apache.org/), get the source and 
+do `buildr tapout:runner` to build the jar and `tapout.sh` as seen below.
+
 ## Intended usage, maybe ##
 
     prove --exec 'java -jar tapout.jar' src/test/java/**/*Test.java
