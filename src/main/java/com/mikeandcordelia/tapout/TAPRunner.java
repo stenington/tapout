@@ -6,12 +6,12 @@ public class TAPRunner {
 
 	private static ClassLoader loader = ClassLoader.getSystemClassLoader();
 
-	public static void main(String[] args) {
+	public static void main(String[] testSpecs) {
 		JUnitCore core = new JUnitCore();
 		core.addListener(new TAPListener());
-		for(int i=0; i < args.length; i++){
+		for(int i=0; i < testSpecs.length; i++){
 			try {
-				Class<?> testClass = loader.loadClass(args[i]);
+				Class<?> testClass = loader.loadClass(testSpecs[i]);
 				core.run(testClass);
 			}
 			catch (Exception e) {

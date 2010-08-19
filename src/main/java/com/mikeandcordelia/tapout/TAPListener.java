@@ -21,13 +21,7 @@ public class TAPListener extends RunListener {
 	@Override
 	public void testFinished(Description description) {
 		if( !noTests ){
-      try {
-			  currentTest.printResult();
-      }
-      catch (Exception e) {
-        System.err.println("Holy crap");
-        System.err.println(e.toString());
-      }
+			currentTest.printResult();
 		}
 	}
 
