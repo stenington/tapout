@@ -21,7 +21,13 @@ public class TAPListener extends RunListener {
 	@Override
 	public void testFinished(Description description) {
 		if( !noTests ){
-			currentTest.printResult();
+      try {
+			  currentTest.printResult();
+      }
+      catch (Exception e) {
+        System.err.println("Holy crap");
+        System.err.println(e.toString());
+      }
 		}
 	}
 
@@ -29,7 +35,7 @@ public class TAPListener extends RunListener {
 	public void testFailure(Failure failure) {
 		failedTotal++;
 		String msg = failure.getMessage();
-		if (msg.matches("No runnable methods")) {
+		if (msg != null && msg.matches("No runnable methods")) {
 			noTests = true;
 		}
 		else {
