@@ -1,0 +1,1 @@
+java -cp /Users/mlarsson/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar:/Users/mlarsson/Projects/tapout/target/tapout-0.0.jar:$CLASSPATH com.mikeandcordelia.tapout.TAPRunner $*
