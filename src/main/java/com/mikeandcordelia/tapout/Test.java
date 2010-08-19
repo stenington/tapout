@@ -58,11 +58,11 @@ public class Test {
 
 	private void printBasicFailure(Failure failure) {
 		StackTraceElement testFrame = findPointOfFailure(failure);
-		String fileName = testFrame.getFileName();
-		int lineNo = testFrame.getLineNumber();
-		System.out.println("not ok " + testNumber + " - " + testName);
-		System.err.println("#   Failed test '" + testName + "'");
-		System.err.println("#   at " + fileName + " line " + lineNo + ".");
+    String fileName = testFrame.getFileName();
+    int lineNo = testFrame.getLineNumber();
+    System.out.println("not ok " + testNumber + " - " + testName);
+    System.err.println("#   Failed test '" + testName + "'");
+    System.err.println("#   at " + fileName + " line " + lineNo + ".");
 	}
 
 	private StackTraceElement findPointOfFailure(Failure failure) {
@@ -82,13 +82,15 @@ public class Test {
 
 	private void maybePrintAdditionalFailure(Failure failure) {
 		String explanation = failure.getException().getMessage();
-		Matcher m = gotExpPattern.matcher(explanation);
-		if (m.matches()) {
-			String got = m.group(2);
-			String exp = m.group(1);
-			System.err.println("#          got: '" + got + "'");
-			System.err.println("#     expected: '" + exp + "'");
-		}
+    if( explanation != null ) {
+      Matcher m = gotExpPattern.matcher(explanation);
+      if (m.matches()) {
+        String got = m.group(2);
+        String exp = m.group(1);
+        System.err.println("#          got: '" + got + "'");
+        System.err.println("#     expected: '" + exp + "'");
+      }
+    }
 	}
 
 }

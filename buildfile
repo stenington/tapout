@@ -34,7 +34,7 @@ define 'tapout' do
   # what are the dependencies here?
   task :runner => package(:jar) do
     cp = Buildr.artifacts(JUNIT, package(:jar)).map(&:name).join(File::PATH_SEPARATOR)
-    File.open(_(RUNNER), 'w') {|f| f.write("java -cp #{cp}:$CLASSPATH #{MAIN} $*") }
+    File.open(_(RUNNER), 'w') {|f| f.write("java -classpath #{cp}:$CLASSPATH #{MAIN} $*") }
   end
 
   task :clean do
