@@ -1,6 +1,7 @@
 package com.mikeandcordelia.tapout;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -43,6 +44,7 @@ public class TAPListenerTest {
 		}
 	}
 
+	/* NO @Before here! We're calling this manually. */
 	public void setUp() {
 		// set listener
 		tapListener = new TAPListener();
@@ -52,47 +54,68 @@ public class TAPListenerTest {
 		err.reset();
 	}
 
+	/* NO @After here! We're calling this manually. */
 	public void tearDown() {
 		core.removeListener(tapListener);
 	}
 
+	/* This test is actually going to manually run a bunch of examples,
+	 * and fail if any example fails. 
+	 */
 	@Test
 	public void testExamples() {
 		File searchDir = new File("src/test/resources/tap");
 		@SuppressWarnings("unchecked")
 		Iterator<File> exampleTests = FileUtils.iterateFiles(searchDir,
 				new TestFilter(), TrueFileFilter.INSTANCE);
+		assertTrue(foundExamples(exampleTests));
+		int examplesRun = 0;
 		while (exampleTests.hasNext()) {
 			File exampleTest = exampleTests.next();
 			setUp();
 			testExample(exampleTest);
 			tearDown();
+			examplesRun++;
 		}
+		assertTrue(examplesRun >= 4);
+	}
+	
+	private boolean foundExamples(Iterator<File> it){
+		return it.hasNext();
 	}
 
 	private void testExample(File exampleTest) {
 		try {
 			File expectedTapFile = getTapFileFor(exampleTest);
+			String expectedTap = FileUtils.readFileToString(expectedTapFile);
 			File expectedTapErrFile = new File(expectedTapFile.getAbsoluteFile()
 					+ ".err");
-			System.setOut(new PrintStream(this.out));
-			System.setErr(new PrintStream(this.err));
-			runTest(exampleTest);
-			String expectedTap = FileUtils.readFileToString(expectedTapFile);
-			assertEquals(expectedTap, out.toString());
 			String expectedErr = FileUtils.readFileToString(expectedTapErrFile);
+			grabOutAndErr();
+			runTestWithTAPListener(exampleTest);
+			assertEquals(expectedTap, out.toString());
 			assertCloseEnough(expectedErr, err.toString());
-			System.setOut(realOut);
-			System.setErr(realErr);
+			releaseOutAndErr();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private void runTest(File exampleTest) {
-		String className = exampleTest.getName().replaceAll("\\.java", "");
+	private void releaseOutAndErr() {
+		System.setOut(realOut);
+		System.setErr(realErr);
+	}
+
+	private void grabOutAndErr() {
+		System.setOut(new PrintStream(this.out));
+		System.setErr(new PrintStream(this.err));
+	}
+
+	private void runTestWithTAPListener(File exampleTest) {
+		String pkg = "tap.";
+		String className = pkg + exampleTest.getName().replaceAll("\\.java", "");
 		try {
-			Class<?>[] classes = { loader.loadClass("tap." + className) };
+			Class<?>[] classes = { loader.loadClass(className) };
 			core.run(classes);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
