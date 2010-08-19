@@ -35,11 +35,14 @@ where prove is the amazing Perl TAP harness testing utility found
 
 ### Current usage example ###
 
-    prove --exec 'env CLASSPATH=test_dep_1:test_dep_2:...:test_dep_n /path/to/tapout/tapout.sh' com.foo.bar.thing.stuff.MyCoolTest [...]
+    prove --exec 'env CLASSPATH=test_dep_1:test_dep_2:...:test_dep_n \
+      /path/to/tapout/tapout.sh' com.foo.bar.thing.stuff.MyCoolTest [...]
 
 will run `MyCoolTest` and any other tests listed.
 
-    prove --exec 'env CLASSPATH=test_dep_1:test_dep_2:...:test_dep_n /path/to/tapout/tapout.sh' com.foo.bar.thing.stuff.MyCoolTest [...] -Q -m --formatter TAP::Formatter::HTML > test_report.html
+    prove --exec 'env CLASSPATH=test_dep_1:test_dep_2:...:test_dep_n \
+      /path/to/tapout/tapout.sh' com.foo.bar.thing.stuff.MyCoolTest [...] \
+      -Q -m --formatter TAP::Formatter::HTML > test_report.html
 
 will generate a `TAP::Formatter::HTML` report for `MyCoolTest` et al. 
 `-m` means merge STDERR and STDOUT, which is nice. `-Q` means 
@@ -47,7 +50,8 @@ don't put junk at the top of the report.
 
 And
 
-    env CLASSPATH=test_dep_1:test_dep_2:...:test_dep_n /path/to/tapout/tapout.sh com.foo.bar.thing.stuff.MyCoolTest [...]
+    env CLASSPATH=test_dep_1:test_dep_2:...:test_dep_n /path/to/tapout/tapout.sh \
+      com.foo.bar.thing.stuff.MyCoolTest [...]
 
 is the same as `perl foo.t`; you get the unadulterated TAP output.
 
