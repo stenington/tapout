@@ -22,11 +22,12 @@ TapOut: TAP-outputting, junit-running goodness
 ==============================================
 
 ## To-do's ##
- * tests on runner
-  * proper output when running many tests
-  * finding tests
- * mechanism for seeing stacktraces?
- * fix run script generation in buildfile
+
+     * tests on runner
+       * proper output when running many tests
+       * finding tests
+     * mechanism for seeing stacktraces?
+     * fix run script generation in buildfile
 
 ## Purpose ##
 
