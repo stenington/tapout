@@ -87,12 +87,24 @@ public class TAPListenerTest {
 		assertEquals("not ok 1 - i will run and fail\nnot ok 2 - so will i\n1..2\n", out.toString());
 		releaseOutAndErr();
 	}
+	
+	@Test
+	public void recoversAfterTestWithNoTests() throws Exception {
+		grabOutAndErr();
+		Class<?>[] tests = {Class.forName("tap.NoTestTest")};
+		core.run(tests);
+		assertEquals("# No tests run!\n", err.toString());
+		tests = new Class<?>[]{Class.forName("tap.PassingOkTest")};
+		core.run(tests);
+		assertEquals("ok 1 - fine\n1..1\n", out.toString());
+		releaseOutAndErr();
+	}
 
 	/* This test is actually going to manually run a bunch of examples,
 	 * and fail if any example fails. 
 	 */
 	@Test
-	public void testExamples() {
+	public void testJUnitOutputsSameTapAsTestMoreExamples() {
 		File searchDir = new File("src/test/resources/tap");
 		@SuppressWarnings("unchecked")
 		Iterator<File> exampleTests = FileUtils.iterateFiles(searchDir,
@@ -101,7 +113,7 @@ public class TAPListenerTest {
 		int examplesRun = 0;
 		while (exampleTests.hasNext()) {
 			File exampleTest = exampleTests.next();
-			testExample(exampleTest);
+			testOneExample(exampleTest);
 			tearDown();
 			setUp();
 			examplesRun++;
@@ -113,7 +125,7 @@ public class TAPListenerTest {
 		return it.hasNext();
 	}
 
-	private void testExample(File exampleTest) {
+	private void testOneExample(File exampleTest) {
 		try {
 			File expectedTapFile = getTapFileFor(exampleTest);
 			String expectedTap = FileUtils.readFileToString(expectedTapFile);

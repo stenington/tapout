@@ -2,6 +2,7 @@
 .metadata
 .project
 .externalToolBuilders
+.settings
 *.swp
 *.tap
 *.tap.err

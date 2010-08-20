@@ -8,10 +8,18 @@ import org.junit.runner.notification.RunListener;
 public class TAPListener extends RunListener {
 
 	private Test currentTest;
-	private int testNum = 0;
-	private int failedTotal = 0;
-	private boolean noTests = false;
+	private int testNum;
+	private int failedTotal;
+	private boolean noTests;
 
+	@Override
+	public void testRunStarted(Description description){
+		testNum = 0;
+		failedTotal = 0;
+		noTests = false;
+		currentTest = null;
+	}
+	
 	@Override
 	public void testStarted(Description description) {
 		testNum++;
