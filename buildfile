@@ -18,8 +18,10 @@ define 'tapout' do
   package :jar  
 
   test.with COMMONS_IO, JUNIT
-  test.compile.from(_('src/test/resources/tap')) # compile the example tap-outputters
-  test.exclude 'tap.*' # but don't run them
+  test.compile.from(_('src/test/resources/tap')) 
+  test.compile.from(_('src/test/resources/examples')) 
+  test.exclude 'tap.*' 
+  test.exclude 'examples.*'
   test.resources :test_data # build test data first!
   
   dotts = FileList.new('src/test/resources/tap/**/*.t')

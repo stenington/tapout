@@ -12,6 +12,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 
@@ -44,7 +46,7 @@ public class TAPListenerTest {
 		}
 	}
 
-	/* NO @Before here! We're calling this manually. */
+	@Before
 	public void setUp() {
 		// set listener
 		tapListener = new TAPListener();
@@ -54,9 +56,36 @@ public class TAPListenerTest {
 		err.reset();
 	}
 
-	/* NO @After here! We're calling this manually. */
+	@After
 	public void tearDown() {
 		core.removeListener(tapListener);
+	}
+	
+	@Test
+	public void regardExceptionAsFailedTest() throws ClassNotFoundException {
+		grabOutAndErr();
+		Class<?>[] tests = {Class.forName("examples.ThrowingTest")};
+		core.run(tests);
+		assertEquals("not ok 1 - this test throws\n1..1\n", out.toString());
+		releaseOutAndErr();
+	}
+	
+	@Test
+	public void allTestsFailWhenConstructorThrows() throws ClassNotFoundException {
+		grabOutAndErr();
+		Class<?>[] tests = {Class.forName("examples.ThrowingInitializerTest")};
+		core.run(tests);
+		assertEquals("not ok 1 - i will run and fail\nnot ok 2 - so will i\n1..2\n", out.toString());
+		releaseOutAndErr();
+	}
+	
+	@Test
+	public void allTestsFailWhenBeforeMethodFails() throws ClassNotFoundException {
+		grabOutAndErr();
+		Class<?>[] tests = {Class.forName("examples.ThrowingSetupTest")};
+		core.run(tests);
+		assertEquals("not ok 1 - i will run and fail\nnot ok 2 - so will i\n1..2\n", out.toString());
+		releaseOutAndErr();
 	}
 
 	/* This test is actually going to manually run a bunch of examples,
@@ -72,9 +101,9 @@ public class TAPListenerTest {
 		int examplesRun = 0;
 		while (exampleTests.hasNext()) {
 			File exampleTest = exampleTests.next();
-			setUp();
 			testExample(exampleTest);
 			tearDown();
+			setUp();
 			examplesRun++;
 		}
 		assertTrue(examplesRun >= 4);
